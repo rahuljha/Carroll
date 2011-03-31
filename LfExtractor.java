@@ -34,6 +34,8 @@ class LfExtractor {
 
 	    Collection<TypedDependency> tdl =  gs.typedDependenciesCollapsed();
 	    
+	    System.out.println(tdl);
+	    
 		Map<String, LfStruct> lfStructs = new HashMap<String, LfStruct>();
 		Map<String, String> waitingObjs = new HashMap<String, String>();
 		

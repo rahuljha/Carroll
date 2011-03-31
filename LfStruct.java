@@ -56,6 +56,7 @@ class LfStruct {
 		String lf = "";
 		
 		if(this.type.equals(LfType.VERB)) {
+			
 			if(depLexUnits.containsKey(EnglishGrammaticalRelations.NOMINAL_SUBJECT) &&
 				depLexUnits.containsKey(EnglishGrammaticalRelations.DIRECT_OBJECT)) {
 				String nsubj = depLexUnits.get(EnglishGrammaticalRelations.NOMINAL_SUBJECT);
@@ -65,16 +66,30 @@ class LfStruct {
 				String objId = counter.getNextXid();
 			
 				lf += nsubj + ": (" + subjId + ")";
-				lf += dobj + ": (" + objId + ")";
+				lf += " "+dobj + ": (" + objId + ")";
+				
+				Map<String, String> optionalDeps = new HashMap<String, String>();
 				
 				if(depLexUnits.containsKey(EnglishGrammaticalRelations.INDIRECT_OBJECT)) {
 					String iobj = depLexUnits.get(EnglishGrammaticalRelations.INDIRECT_OBJECT);
 					String iobjId = counter.getNextXid();
-					lf += " " + iobj + ": (" + iobjId + ")";
-					lf += " " + mainLexUnit + ": ("+verbId + "," + subjId + "," + objId + "," + iobjId + ")";
-				} else {
-					lf += " " + mainLexUnit + ": ("+verbId + "," + subjId + "," + objId + ")";
+					optionalDeps.put(iobj, iobjId);
+				} if(depLexUnits.containsKey(EnglishGrammaticalRelations.TEMPORAL_MODIFIER)) {
+					String tmod = depLexUnits.get(EnglishGrammaticalRelations.TEMPORAL_MODIFIER);
+					String tmodId = counter.getNextXid();
+					optionalDeps.put(tmod, tmodId);
+					
 				}
+				
+				String mainPredStr = " " + mainLexUnit + ": ("+verbId + ", " + subjId + ", " + objId;
+				for(String optDep: optionalDeps.keySet()) {
+					String optDepId = optionalDeps.get(optDep);
+					lf += " " + optDep+": ("+optDepId+")";
+					mainPredStr += ", " + optDepId;
+				}
+				
+				mainPredStr += ")";
+				lf += mainPredStr;
 				
 				if(lexicalChains.containsKey(dobj)) {
 						
