@@ -17,8 +17,8 @@ class LfExtractor {
 	
 	LexicalizedParser lp;
 	
-	LfExtractor() {
-		lp = new LexicalizedParser("/Users/rahuljha/Research/tools/stanford-parser-2010-11-30/englishPCFG.ser.gz");
+	LfExtractor(String pcfgFilePath) {
+		lp = new LexicalizedParser(pcfgFilePath);
 	    lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
 	}
 	
@@ -33,9 +33,7 @@ class LfExtractor {
 	    GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
 
 	    Collection<TypedDependency> tdl =  gs.typedDependenciesCollapsed();
-	    
-	    System.out.println(tdl);
-	    
+    
 		Map<String, LfStruct> lfStructs = new HashMap<String, LfStruct>();
 		Map<String, String> waitingObjs = new HashMap<String, String>();
 		
@@ -65,9 +63,7 @@ class LfExtractor {
 	    for(String k: lfStructs.keySet()) {
 	    	
 	    	String lfStr = lfStructs.get(k).generateLf();
-	    	if(lfStr != "") {
-	    		System.out.println(lfStr);
-	    	}
+	    	System.out.println(lfStr);
 	    }
 
 	}

@@ -10,7 +10,8 @@ import org.apache.commons.cli.PosixParser;
 
 class Driver {
 	
-	static String helpMessage = "Carroll -f <filename> | -s <string>";
+	static String helpMessage = "Carroll -d <PCFG location> -f <filename> | -s <string>";
+	static String pcfgFilePath = "";
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		
@@ -18,12 +19,20 @@ class Driver {
 		
 		options.addOption("s", true, "Read text from the given string");
 		options.addOption("f", true, "Read text from the given filename");
+		options.addOption("d", true, "Location for the PCFG file");
 		
 		
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd = parser.parse( options, args);
 		
 		String inputText = "";
+		
+		if(cmd.hasOption("d")) {
+			pcfgFilePath = cmd.getOptionValue("d");
+		} else {
+			System.out.println(helpMessage);
+			System.exit(0);
+		}
 		
 		if(cmd.hasOption("s")) {
 		    // read from string
@@ -60,7 +69,8 @@ class Driver {
 	  
 	  List<String> sentences = TextUtils.extractSentences(inputText);
 	  
-	  LfExtractor lf = new LfExtractor();
+	  LfExtractor lf = new LfExtractor(pcfgFilePath);
+	  
 	  for(String sentence: sentences) {
 		  sentence = sentence.replaceAll("\\[\\*\\*[^\\d]*(\\d+)\\*\\*\\]", "X$1");
 		  lf.parseString(sentence);
