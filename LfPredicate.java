@@ -11,15 +11,20 @@ class LfPredicate {
 	String headVar;
 	List<String> argVars;
 	
-	LfPredicate(String lex) {
-		Lemmatizer lemmatizer = null;
-		try {
-			lemmatizer = new DefaultLemmatizer();
-			this.lex = lemmatizer.lemmatize(lex);
-		} catch (Exception e) {
-			System.err.println("Error in lemmatization"+e.getMessage());
+	LfPredicate(String lex, predicateType type) {
+		
+		if(type.equals(predicateType.EVENT)) {
+			Lemmatizer lemmatizer = null;
+			try {
+				lemmatizer = new DefaultLemmatizer();
+				this.lex = lemmatizer.lemmatize(lex);
+			} catch (Exception e) {
+				System.err.println("Error in lemmatization"+e.getMessage());
+				this.lex = lex;
+			}
+		} else {
 			this.lex = lex;
-		} 
+		}
 		
 		argVars = new ArrayList<String>();
 	}
@@ -30,6 +35,14 @@ class LfPredicate {
 	
 	public void addArgVar(String varName) {
 		this.argVars.add(varName);
+	}
+	
+	public void clearArgVars() {
+		this.argVars = new ArrayList<String>();
+	}
+	
+	public void setLex(String lex) {
+		this.lex = lex;
 	}
 	
 	public String getHeadVar() {
@@ -55,6 +68,12 @@ class LfPredicate {
 		
 		return predStr;
 	}
+
+	public String getLex() {
+		return this.lex;
+	}
+
+
 	
 }
 

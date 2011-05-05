@@ -69,11 +69,18 @@ class Driver {
 	  
 	  List<String> sentences = TextUtils.extractSentences(inputText);
 	  
-	  LfExtractor lf = new LfExtractor(pcfgFilePath);
+	  DepParser dp = new DepParser(pcfgFilePath);
+	  PredicateExtractor pe = new PredicateExtractor();
 	  
 	  for(String sentence: sentences) {
-		  sentence = sentence.replaceAll("\\[\\*\\*[^\\d]*(\\d+)\\*\\*\\]", "X$1");
-		  lf.parseString(sentence);
+		  Collection<LfPredicate> predicates = pe.extractPredicates(dp.parse(sentence));
+		  for(LfPredicate predicate: predicates) {
+			  System.out.print(predicate.toString()+" ");
+		  }
+		  if(predicates.size() == 0) {
+			  System.out.print("nopred(e0)");
+		  }
+		  System.out.println();
 	  }
 	  
 

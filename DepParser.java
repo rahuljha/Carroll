@@ -1,9 +1,5 @@
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.Test;
 
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.trees.GrammaticalStructure;
