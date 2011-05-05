@@ -69,11 +69,15 @@ class PredicateExtractor {
 		return predicateMap.values();
 	}
 	
-	void eventRelHandler(TypedDependency td, LfPredicate.predicateType secondPredType) {
+	void eventRelHandler(TypedDependency td, LfPredicate.predicateType secondPredType, Boolean isMainArg) {
 		LfPredicate eventPred = getPred(td.gov(), LfPredicate.predicateType.EVENT);
 		LfPredicate entityPred = getPred(td.dep(), secondPredType);
 		
-		eventPred.addArgVar(entityPred.getHeadVar());
+		if(isMainArg) {
+			eventPred.addArgVarMain(entityPred.getHeadVar());
+		} else {
+			eventPred.addArgVar(entityPred.getHeadVar());
+		}
 		inversePredicateMap.put(td.dep().toString(), td.gov().toString());
 		
 	}
@@ -81,7 +85,7 @@ class PredicateExtractor {
 	/* Here begin the handlers for the supported typed dependencies*/
 	
 	void acompHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, false);
 	}
 	
 	void advclHandler(TypedDependency td) {
@@ -209,11 +213,11 @@ class PredicateExtractor {
 	}
 	
 	void dobjHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, false);
 	}
 	
 	void iobjHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, false);
 	}
 	
 	void markHandler(TypedDependency td) {
@@ -243,11 +247,11 @@ class PredicateExtractor {
 	}
 	
 	void nsubjHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, true);
 	}
 	
 	void nsubjpassHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, true);
 	}
 	
 	void possHandler(TypedDependency td) {
@@ -277,16 +281,15 @@ class PredicateExtractor {
 		prepPred.setHeadVar(headVarToUse);
 		prepPred.addArgVar(secondPred.headVar);
 		
-		if(prepLex.equals("in")) {
-			firstPred.addArgVar(secondPred.headVar);
-		}
+		//firstPred.addArgVar(secondPred.headVar);
+
 		
 		predicateMap.put(headVarToUse+"_"+secondPred.headVar, prepPred);
 		
 	}
 	
 	void tmodHandler(TypedDependency td) {
-		eventRelHandler(td, LfPredicate.predicateType.ENTITY);
+		eventRelHandler(td, LfPredicate.predicateType.ENTITY, false);
 	}
 	
 	void xcompHandler(TypedDependency td) {

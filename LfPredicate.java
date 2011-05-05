@@ -37,6 +37,14 @@ class LfPredicate {
 		this.argVars.add(varName);
 	}
 	
+	public void addArgVarMain(String varName) {
+		if(this.argVars.size() > 0 && !this.argVars.get(0).equals("")) {
+			this.argVars.add(0, varName);
+		} else {
+			addArgVar(varName);
+		}
+	}
+	
 	public void clearArgVars() {
 		this.argVars = new ArrayList<String>();
 	}
