@@ -312,6 +312,53 @@ class PredicateExtractor {
 		}
 	}
 	
+	void detHandler(TypedDependency td)
+	{
+		LfPredicate nounPred =getPred(td.gov(), LfPredicate.predicateType.ENTITY);
+		LfPredicate detPred= getPred(td.dep(), LfPredicate.predicateType.ENTITY);
+		detPred.setHeadVar(nounPred.headVar);
+		predicateMap.put(td.dep().toString(), detPred);
+	}
+
+
+void prtHandler(TypedDependency td)
+	{
+		LfPredicate verbPred =getPred(td.gov(), LfPredicate.predicateType.ENTITY);
+		LfPredicate prtPred= getPred(td.dep(), LfPredicate.predicateType.ENTITY);
+		prtPred.setHeadVar(verbPred.headVar);
+		predicateMap.put(td.dep().toString(), prtPred);
+	}
+
+
+void csubjHandler(TypedDependency td)
+	{
+		eventRelHandler(td, LfPredicate.predicateType.EVENT, false);
+	}
+
+void prepcHandler(TypedDependency td)
+	{
+		String prepLex;
+		if(td.reln().toString().split("_").length > 1) {
+			prepLex = td.reln().toString().split("_")[1];
+		} else {
+			prepLex = "";
+		}
+		LfPredicate prepcPred = new LfPredicate(prepLex, LfPredicate.predicateType.ENTITY);
+		
+		LfPredicate firstPred = getPred(td.gov(), LfPredicate.predicateType.EVENT);
+		LfPredicate secondPred = getPred(td.dep(), LfPredicate.predicateType.ENTITY);
+		
+		String headVarToUse = passiveSubst.containsKey(firstPred.getHeadVar()) ? 
+				passiveSubst.get(firstPred.getHeadVar()) :
+				firstPred.getHeadVar();
+
+				prepcPred.setHeadVar(headVarToUse);
+
+		prepcPred.addArgVar(secondPred.headVar);
+		
+		predicateMap.put(headVarToUse+"_"+secondPred.headVar, prepcPred);
+
+	}
 
 	LfPredicate getPred(TreeGraphNode tgNode, LfPredicate.predicateType predType) {
 		if(predicateMap.containsKey(tgNode.toString())) {
